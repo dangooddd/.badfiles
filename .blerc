@@ -1,0 +1,46 @@
+# ble options file
+
+bleopt exec_errexit_mark=""
+
+ble-face filename_directory="fg=blue"
+ble-face filename_directory_sticky="fg=blue"
+ble-face filename_link="fg=teal"
+ble-face filename_setuid="fg=black,bg=yellow,underline"
+ble-face filename_setgid="fg=black,bg=green,underline"
+ble-face filename_orphan="fg=teal,bg=white,underline"
+
+ble-face region_insert="fg=grey"
+ble-face region_match="fg=black,bg=purple"
+ble-face region_target="fg=black,bg=blue"
+
+ble-face varname_expr="fg=purple,bold"
+ble-face varname_export="fg=magenta,bold"
+ble-face varname_empty="fg=navy"
+ble-face varname_hash="fg=green,bold"
+ble-face varname_number="fg=cyan"
+ble-face varname_readonly="fg=purple"
+ble-face varname_unset="fg=brown"
+ble-face varname_transform="fg=lime,bold"
+
+ble-face syntax_expr="fg=blue"
+ble-face syntax_history_expansion="fg=white,bg=brown"
+ble-face syntax_brace="fg=navy,bold"
+ble-face syntax_glob="fg=red,bold"
+ble-face syntax_error="fg=brown"
+ble-face syntax_comment="fg=grey"
+ble-face syntax_function_name="fg=purple,bold"
+
+ble-face command_alias="fg=magenta"
+ble-face command_builtin="fg=magenta"
+ble-face command_file="fg=magenta"
+ble-face command_directory="fg=blue"
+ble-face command_function="fg=purple"
+
+ble-face disabled="fg=grey"
+ble-face prompt_status_line="fg=white,bg=grey"
+ble-face menu_filter_input="fg=black,bg=white"
+ble-face overwrite_mode="fg=black,bg=blue"
+ble-face cmdinfo_cd_cdpath="fg=green,bg=black"
+ble-face argument_error="fg=yellow"
+ble-face auto_complete="fg=grey"
+ble-face vbell_erase="fg=white,bg=grey"
