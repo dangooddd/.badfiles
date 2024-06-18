@@ -1,8 +1,13 @@
 function conf()
     require("nvim-treesitter.configs").setup({
         ensure_installed = { 
+            "bash",
             "c", 
             "lua", 
+            "luadoc",
+            "diff",
+            "html",
+            "markdown",
             "vim",
             "vimdoc", 
             "query", 

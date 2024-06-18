@@ -7,8 +7,11 @@ local g = vim.g
 -- general
 opt.clipboard = "unnamedplus"
 opt.number = true
-opt.numberwidth = 2
+opt.relativenumber = true
+opt.undofile = true
 opt.signcolumn = "yes"
+opt.cursorline = true
+opt.cursorlineopt = "number"
 
 -- tabs
 opt.tabstop = 4        -- 1 tab represented as 4 spaces

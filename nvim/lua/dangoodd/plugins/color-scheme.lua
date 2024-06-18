@@ -3,10 +3,21 @@ function conf()
         commentStyle = { italic = false },
         keywordStyle = { italic = false },  
         colors = {
-            theme = { all = { ui = { bg_gutter = 'none' } } },
-        }
+            theme = {
+                all = { 
+                    ui  = { bg_gutter = 'none' },
+                }, 
+            },
+        },
+        overrides = function(colors)
+            return {
+                CursorLineNr = { 
+                    bold = false,
+                },
+            }
+        end
     })
-    vim.cmd("colorscheme kanagawa-dragon")
+    vim.cmd("colorscheme kanagawa")
 end
 
 return {

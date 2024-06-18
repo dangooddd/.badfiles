@@ -1,4 +1,5 @@
-vim.g.mapleader = " "
+vim.g.mapleader = ' '
+vim.g.maplocal = ' '
 
 local lazy_path = vim.fn.stdpath("data").."/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazy_path) then
@@ -7,11 +8,12 @@ if not vim.uv.fs_stat(lazy_path) then
         "clone",
         "--filter=blob:none",
         "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
+        "--branch=stable",
         lazy_path,
     })
 end
 vim.opt.rtp:prepend(lazy_path)
 
 require("dangoodd.options")
+require("dangoodd.keybinds")
 require("lazy").setup("dangoodd.plugins")
