@@ -1,2 +1,2 @@
--- load ./lua/dangoodd/init.lua
+-- load config
 require("dangoodd")

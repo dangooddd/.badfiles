@@ -1,6 +1,6 @@
-------------------------
---      Options
-------------------------
+---------------------------------------
+-- Options
+---------------------------------------
 local opt = vim.opt
 local g = vim.g
 
@@ -20,6 +20,6 @@ opt.shiftwidth = 4     -- indent change after backspace and >> <<
 opt.softtabstop = 4    -- number of spaces instead of tab 
 opt.smartindent = true -- auto indent
 
--- plugins
-g.loaded_netrw = 1
-g.loaded_netrwPlugin = 1
+-- leader
+vim.g.mapleader = " "
+vim.g.maplocal = "\\"

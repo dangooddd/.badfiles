@@ -1,0 +1,48 @@
+# starship.toml
+
+add_newline = false
+format = """
+$directory[](fg:carpyellow bg:sumiink3)\
+[($python$git_branch$hostname )](bg:sumiink3)[](fg:sumiink3 bg:oniviolet)\
+$character[](fg:oniviolet) 
+"""
+
+palette = "kanagawa"
+
+[palettes.kanagawa]
+springgreen = "#98BB6C"
+peachred = "#FF5D62"
+oniviolet = '#957FB8'
+oniviolet2 = '#B8B4D0'
+carpyellow = '#C0A36E'
+sumiink1 = "#1F1F28"
+sumiink3 = "#363646"
+
+# dollar sign prompt
+[character]
+format = '[ $symbol ](bold bg:oniviolet fg:sumiink1)'
+success_symbol = '\$'
+error_symbol ='#'
+vimcmd_symbol = 'N'
+vimcmd_replace_one_symbol = 'R'
+vimcmd_replace_symbol = 'R'
+vimcmd_visual_symbol = 'V'
+
+[directory]
+format = "[ $path ]($style)"
+style = "bold bg:carpyellow fg:sumiink1"
+truncation_symbol = "../"
+truncation_length = 3
+truncate_to_repo = false
+
+[git_branch]
+format = "[( $branch)]($style)"
+style = "bold bg:sumiink3 fg:peachred"
+
+[python]
+format = '[( $virtualenv)]($style)'
+style = "bold bg:sumiink3 fg:#98BB6C"
+
+[hostname]
+format = "[( $hostname)]($style)"
+style = "bold bg:sumiink3 fg:oniviolet2"

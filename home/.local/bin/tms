@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+SESSION_DIR="$PWD"
+SESSION_NAME_RAW="$(basename "$SESSION_DIR")"    
+SESSION_NAME="${SESSION_NAME_RAW//./_}"
+
+if tmux has-session -t "$SESSION_NAME" &> /dev/null; then
+    HAS="Y"
+else
+    HAS="N"
+fi
+
+if ! [[ -z "$TMUX" ]]; then
+    ACTIVE="Y" 
+else
+    ACTIVE="N"
+fi
+
+case "$HAS$ACTIVE" in
+    "NN") tmux new -s "$SESSION_NAME" -c "$SESSION_DIR";;
+    "YN") tmux attach -t "$SESSION_NAME";;
+    "NY")
+        tmux new -d -s "$SESSION_NAME" -c "$SESSION_DIR"
+        tmux switch -t "$SESSION_NAME"
+        ;;
+    "YY") tmux switch -t "$SESSION_NAME";;
+esac

@@ -1,7 +1,9 @@
--- keybinds.lua
+---------------------------------------
+-- Keybinds
+---------------------------------------
 local keymap = vim.keymap
 
--- general
+-- window managment
 keymap.set('n', "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" } )
 keymap.set('n', "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" } )
 keymap.set('n', "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" } )
