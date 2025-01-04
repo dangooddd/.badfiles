@@ -22,7 +22,7 @@ sumiink3 = "#363646"
 [character]
 format = '[ $symbol ](bold bg:oniviolet fg:sumiink1)'
 success_symbol = '\$'
-error_symbol ='#'
+error_symbol = '#'
 vimcmd_symbol = 'N'
 vimcmd_replace_one_symbol = 'R'
 vimcmd_replace_symbol = 'R'
@@ -37,7 +37,7 @@ truncate_to_repo = false
 
 [git_branch]
 format = "[( $branch)]($style)"
-style = "bold bg:sumiink3 fg:peachred"
+style = "bold bg:sumiink3 fg:reversed"
 
 [python]
 format = '[( $virtualenv)]($style)'
