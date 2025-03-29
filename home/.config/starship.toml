@@ -1,48 +1,63 @@
 # starship.toml
 
-add_newline = false
-format = """
-$directory[](fg:carpyellow bg:sumiink3)\
-[($python$git_branch$hostname )](bg:sumiink3)[](fg:sumiink3 bg:oniviolet)\
-$character[](fg:oniviolet) 
-"""
+# config schema
+"$schema" = "https://starship.rs/config-schema.json"
 
-palette = "kanagawa"
+add_newline = false
+palette = "gruvbox"
+format = """
+[$directory](fg:bg bg:yellow)\
+[](fg:yellow bg:orange)\
+[$container$rust$python$git_branch$hostname](fg:bg bg:orange)\
+[](fg:orange bg:red)\
+[$character](fg:bg bg:red)\
+[](fg:red)\
+[ ](none)"""
 
 [palettes.kanagawa]
-springgreen = "#98BB6C"
-peachred = "#FF5D62"
-oniviolet = '#957FB8'
-oniviolet2 = '#B8B4D0'
-carpyellow = '#C0A36E'
-sumiink1 = "#1F1F28"
-sumiink3 = "#363646"
+bg = "#1f1f28"
+red = "#ff5d62"
+yellow = "#e6c384"
+orange = "#ffa066"
 
-# dollar sign prompt
+[palettes.gruvbox]
+bg = "#1d2021"
+red = "#fb4934"
+orange = "#fe8019"
+yellow = "#fabd2f"
+
 [character]
-format = '[ $symbol ](bold bg:oniviolet fg:sumiink1)'
-success_symbol = '\$'
-error_symbol = '#'
-vimcmd_symbol = 'N'
-vimcmd_replace_one_symbol = 'R'
-vimcmd_replace_symbol = 'R'
-vimcmd_visual_symbol = 'V'
+format = "$symbol"
+success_symbol = ' \$ '
+error_symbol = " # "
+vimcmd_symbol = " N "
+vimcmd_replace_one_symbol = " R "
+vimcmd_replace_symbol = " R "
+vimcmd_visual_symbol = " V "
 
 [directory]
-format = "[ $path ]($style)"
-style = "bold bg:carpyellow fg:sumiink1"
-truncation_symbol = "../"
-truncation_length = 3
+format = " $path ($read_only)"
+read_only = "󰌾 "
+truncation_symbol = ""
+truncation_length = 1
 truncate_to_repo = false
 
 [git_branch]
-format = "[( $branch)]($style)"
-style = "bold bg:sumiink3 fg:reversed"
+format = " $symbol$branch "
 
 [python]
-format = '[( $virtualenv)]($style)'
-style = "bold bg:sumiink3 fg:#98BB6C"
+format = " $symbol($virtualenv )($version )"
+symbol = " "
+
+[rust]
+format = " $symbol($version )"
+symbol = " "
 
 [hostname]
-format = "[( $hostname)]($style)"
-style = "bold bg:sumiink3 fg:oniviolet2"
+format = " $ssh_symbol$hostname "
+ssh_only = true
+ssh_symbol = "󰣀 "
+
+[container]
+format = " $symbol$name "
+symbol = " "

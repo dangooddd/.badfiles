@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
+
+disableStartupPopups: true
+promptToReturnFromSubprocess: false
+notARepository: skip
+
+gui:
+  border: single
+
+  ## Kanagawa
+  theme:
+    ## Palette
+    # sumiInk3      "#1f1f28" bg
+    # sumiInk4      "#2a2a37"
+    # sumiInk6      "#54546d"
+    # peachRed      "#ff5d62"
+    # carpYellow    "#e6c384"
+    # fujiWhite     "#dcd7ba" fg
+    # surimiOrange  "#ffa066"
+    # oniViolet     "#957fb8"
+
+    # activeBorderColor:
+    #   - "#957fb8"
+    #   - bold
+    #
+    # inactiveBorderColor:
+    #   - "#54546d"
+    #
+    # searchingActiveBorderColor:
+    #   - "#ffa066"
+    #   - bold
+    #
+    # optionsTextColor:
+    #   - "#e6c384"
+    #
+    # selectedLineBgColor:
+    #   - "#2a2a37"
+    #
+    # inactiveViewSelectedLineBgColor:
+    #   - bold
+    #
+    # cherryPickedCommitFgColor:
+    #   - "#1f1f28"
+    #
+    # cherryPickedCommitBgColor:
+    #   - "#957fb8"
+    #
+    # markedBaseCommitFgColor:
+    #   - "#1f1f28"
+    #
+    # markedBaseCommitBgColor:
+    #   - "#ffa066"
+    #
+    # unstagedChangesColor:
+    #   - "#ff5d62"
+    #
+    # defaultFgColor:
+    #   - "#dcd7ba"
+
+    activeBorderColor:
+      - "#fabd2f"
+      - bold
+
+    inactiveBorderColor:
+      - "#a89984"
+
+    searchingActiveBorderColor:
+      - "#fe8019"
+      - bold
+
+    optionsTextColor:
+      - "#ebdbb2"
+
+    selectedLineBgColor:
+      - "#3c3836"
+
+    inactiveViewSelectedLineBgColor:
+      - bold
+
+    cherryPickedCommitFgColor:
+      - "#1d2021"
+
+    cherryPickedCommitBgColor:
+      - "#b8bb26"
+
+    markedBaseCommitFgColor:
+      - "#1d2021"
+
+    markedBaseCommitBgColor:
+      - "#fabd2f"
+
+    unstagedChangesColor:
+      - "#fb4934"
+
+    defaultFgColor:
+      - "#ebdbb2"
+
+  authorColors:
+    "*": "#b8bb26"
+
+  # authorColors:
+  #   "*": "#e6c384"
