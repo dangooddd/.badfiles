@@ -1,76 +1,128 @@
-# .bashrc
-
-#======================================
-# Global definitions
-#======================================
+################################################################################
+# General
+################################################################################
 if [[ -f /etc/bashrc ]]; then
     . /etc/bashrc
 fi
 
+if [[ -f "$HOME"/.bash_local ]]; then
+    . "$HOME"/.bash_local
+fi
 
-#======================================
-# Prompt
-#======================================
-function __precmd_hook {
-    # empty line between prompts
-    if [[ -z "$__bash_empty_prompt" ]]; then
-        __bash_empty_prompt="Y"
-    else
-        echo ""
-    fi
-
-    # window title
-    echo -ne "\e]0;${PWD/#$HOME/\~}\a"
-
-    # auto-venv
-    if [[ -z "$__auto_venv_stop" ]]; then
-        venv-update
-    fi
-}
-
-export VIRTUAL_ENV_DISABLE_PROMPT="Y"
-PROMPT_COMMAND=("__precmd_hook")
-
-
-#=====================================
-# Path 
-#======================================
 function add-path {
     if ! [[ "$PATH" =~ "$1:" ]]; then
         PATH="$1:$PATH"
         export PATH
     fi
 }
-add-path "$HOME/.local/bin"
-add-path "$HOME/.cargo/bin"
+add-path "$HOME"/.local/bin
+add-path "$HOME"/.cargo/bin
 
-
-#======================================
-# Bash options
-#======================================
-export HISTSIZE=500
+export HISTSIZE=1000
 export HISTFILESIZE=10000
 export HISTTIMEFORMAT="%F %T "
 export HISTCONTROL="erasedups:ignoreboth"
 shopt -s histappend
 shopt -s checkwinsize
 
+FZF_COLORS="gutter:#1d2021"
+FZF_COLORS+=",fg:#ebdbb2"
+FZF_COLORS+=",bg:#1d2021"
+FZF_COLORS+=",hl:#928374"
+FZF_COLORS+=",fg+:#ebdbb2"
+FZF_COLORS+=",bg+:#3c3836"
+FZF_COLORS+=",hl+:#d3869b"
+FZF_COLORS+=",info:#665c54"
+FZF_COLORS+=",prompt:#b8bb26"
+FZF_COLORS+=",pointer:#fb4934"
+FZF_COLORS+=",marker:#b16286"
+FZF_COLORS+=",spinner:#83a598"
+FZF_COLORS+=",header:#928374"
+FZF_COLORS+=",border:#a89984"
 
-#======================================
-# Aliases and functions
-#======================================
-function auto-venv-toggle {
-    if [[ -z "$__auto_venv_stop" ]]; then
-        __auto_venv_stop="Y"
-    else
-        __auto_venv_stop=""
+export FZF_DEFAULT_OPTS="--layout=reverse \
+                         --height 10 \
+                         --ansi \
+                         --border=rounded \
+                         --highlight-line \
+                         --no-bold \
+                         --color=$FZF_COLORS"
+
+export PYTHONSTARTUP="$HOME"/.pythonstartup.py
+export RUSTUP_HOME="$HOME"/.rustup
+export CARGO_HOME="$HOME"/.cargo
+export PAGER="less"
+export LESS="--tilde -RFXS"
+
+if [[ -f "$CARGO_HOME"/env ]]; then
+    . "$CARGO_HOME"/env
+fi
+
+if command -v nvim &> /dev/null; then
+    export VISUAL="nvim"
+    export EDITOR="nvim"
+fi
+
+
+################################################################################
+# Prompt
+################################################################################
+function __venv_autoupdate {
+    if [[ -z "$__venv_autoupdate_stop" ]]; then
+        venv-update
     fi
 }
 
-function auto-venv {
-    __auto_venv_name="$1"
-    if [[ -z "$__auto_venv_name" ]]; then
-        __auto_venv_name=".venv"
+function __window_title {
+    echo -ne "\e]0;${PWD/#$HOME/\~}\a"
+}
+
+function __osc7_cwd {
+    local strlen=${#PWD}
+    local encoded=""
+    local pos c o
+    for (( pos=0; pos<strlen; pos++ )); do
+        c=${PWD:$pos:1}
+        case "$c" in
+            [-/:_.!\'\(\)~[:alnum:]] ) o="${c}" ;;
+            * ) printf -v o '%%%02X' "'${c}" ;;
+        esac
+        encoded+="${o}"
+    done
+    printf '\e]7;file://%s%s\e\\' "${HOSTNAME}" "${encoded}"
+}
+
+function __precmd_hook {
+    __venv_autoupdate
+    __window_title
+    __osc7_cwd
+}
+
+if command -v starship &> /dev/null; then
+    eval "$(starship init bash)"
+    starship_precmd_user_func="__precmd_hook"
+    export VIRTUAL_ENV_DISABLE_PROMPT="Y"
+else
+    PROMPT_COMMAND+=("__precmd_hook")
+    export VIRTUAL_ENV_DISABLE_PROMPT=""
+fi
+
+
+################################################################################
+# Aliases and functions
+################################################################################
+function venv-autoupdate-toggle {
+    if [[ -z "$__venv_autoupdate_stop" ]]; then
+        __venv_autoupdate_stop="Y"
+    else
+        __venv_autoupdate_stop=""
+    fi
+}
+
+function venv-update-setname {
+    __venv_update_name="$1"
+    if [[ -z "$__venv_update_name" ]]; then
+        __venv_update_name=".venv"
     fi
 
     if [[ -n "$VIRTUAL_ENV" ]]; then
@@ -78,35 +130,34 @@ function auto-venv {
     fi
 }
 
-__auto_venv_name=.venv
+__venv_update_name=.venv
 function venv-update {
-    local path="$__auto_venv_name/bin/activate"
-    local venv=""
-    # depth = 2
-    [[ -e "../$path" ]] && venv="../$path"
-    [[ -e "$path" ]] && venv="$path"
+    local activate_tmp="$__venv_update_name/bin/activate"
+    local activate=""
+    [[ -e ../$activate_tmp ]] && activate=../"$activate_tmp"
+    [[ -e $activate_tmp ]] && activate="$activate_tmp"
 
     # not active
-    if [[ -z "$VIRTUAL_ENV" ]] &&
-        [[ -n "$venv" ]]; then
-        . "$venv"
+    if [[ -z $VIRTUAL_ENV ]] &&
+        [[ -n $activate ]]; then
+        source "$activate"
     fi
 
     # nested interactive shells (for example, tmux)
     if [[ -n "$VIRTUAL_ENV" ]] &&
-        ! [[ "$(type -t deactivate)" == "function" ]]; then
-        . "$VIRTUAL_ENV"/bin/activate
+        ! [[ $(type -t deactivate) == *function* ]]; then
+        source "$VIRTUAL_ENV"/bin/activate
     fi
 
     # update venv
-    if [[ -n "$VIRTUAL_ENV" ]] &&
+    if [[ -n $VIRTUAL_ENV ]] &&
         [[ "$(dirname "$VIRTUAL_ENV")" != "$PWD" ]] &&
-        [[ -n "$venv" ]]; then
-        . "$venv"
+        [[ -n $activate ]]; then
+        source "$activate"
     fi
 
     # exit of venv
-    if [[ -n "$VIRTUAL_ENV" ]] &&
+    if [[ -n $VIRTUAL_ENV ]] &&
         ! [[ "$PWD" =~ "$(dirname "$VIRTUAL_ENV")" ]]; then
         deactivate
     fi
@@ -117,9 +168,8 @@ function ls {
                --color=auto "$@"
 }
 
-function clear {
-    command clear
-    __bash_empty_prompt=""
+function la {
+    ls -Av
 }
 
 function yank {
@@ -162,39 +212,6 @@ function paste-cut {
     ls -Av
 }
 
-declare -A __marks_array
-function mark {
-    __marks_array+=(["$1"]="$(readlink -f .)")
-}
-
-function mark-list {
-    for key in "${!__marks_array[@]}"
-    do
-        echo "[$key] = ${__marks_array["$key"]/#$HOME/\~}"
-    done
-}
-
-function mark-go {
-    cd "${__marks_array["$1"]}" && ls -Av
-}
-
-function yy {
-    local tmp
-    tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    yazi "$@" --cwd-file="$tmp"
-    if cwd="$(command cat -- "$tmp")" && [[ -n "$cwd" ]] && [[ "$cwd" != "$PWD" ]]; then
-        if command -v zoxide &> /dev/null; then
-            zoxide add "$cwd"
-        fi
-        builtin cd -- "$cwd" 
-    fi
-    rm -f -- "$tmp"
-}
-
-alias pipu="PIP_CONFIG_FILE=/dev/null pip"
-alias open="xdg-open"
-alias la="ls -Av"
-alias ll="ls -Alv"
 alias rg="rg --smart-case \
              --hidden \
              --glob=!./git \
@@ -207,73 +224,20 @@ alias gc="git commit"
 alias gp="git push"
 
 
-#======================================
-# Init and env
-#======================================
-if command -v nvim &> /dev/null; then
-    export VISUAL="nvim"
-    export EDITOR="nvim"
+################################################################################
+# Init
+################################################################################
+if command -v fzf &> /dev/null; then
+    eval "$(fzf --bash)"
 fi
 
-# FZF_COLORS="gutter:#1F1F28"
-# FZF_COLORS+=",fg:#DCD7BA"
-# FZF_COLORS+=",bg:#1F1F28"
-# FZF_COLORS+=",hl:#727169"
-# FZF_COLORS+=",fg+:#DCD7BA"
-# FZF_COLORS+=",bg+:#363646"
-# FZF_COLORS+=",hl+:#957FB8"
-# FZF_COLORS+=",info:#54546D"
-# FZF_COLORS+=",prompt:#98BB6C"
-# FZF_COLORS+=",pointer:#FF5D62"
-# FZF_COLORS+=",marker:#957FB8"
-# FZF_COLORS+=",spinner:#7FB4CA"
-# FZF_COLORS+=",header:#727169"
-# FZF_COLORS+=",border:#54546D"
-
-FZF_COLORS="gutter:#1d2021"
-FZF_COLORS+=",fg:#ebdbb2"
-FZF_COLORS+=",bg:#1d2021"
-FZF_COLORS+=",hl:#928374"
-FZF_COLORS+=",fg+:#ebdbb2"
-FZF_COLORS+=",bg+:#3c3836"
-FZF_COLORS+=",hl+:#b16286"
-FZF_COLORS+=",info:#665c54"
-FZF_COLORS+=",prompt:#b8bb26"
-FZF_COLORS+=",pointer:#fb4934"
-FZF_COLORS+=",marker:#b16286"
-FZF_COLORS+=",spinner:#83a598"
-FZF_COLORS+=",header:#928374"
-FZF_COLORS+=",border:#665c54"
-
-export FZF_DEFAULT_OPTS="--layout=reverse \
-                         --height 10 \
-                         --ansi \
-                         --border=rounded \
-                         --highlight-line \
-                         --no-bold \
-                         --color=$FZF_COLORS"
-
-export PYTHONSTARTUP="$HOME"/.pythonstartup.py
-export RUSTUP_HOME="$HOME"/.rustup
-export CARGO_HOME="$HOME"/.cargo
-export PAGER="less"
-export LESS="--tilde -RFXS"
-
-if [[ -f "$CARGO_HOME"/env ]]; then
-    . "$CARGO_HOME"/env
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook bash)"
 fi
 
 if command -v zoxide &> /dev/null; then
     eval "$(zoxide init bash)"
     function zd {
-        __zoxide_z "$@" && ls -Av
+        __zoxide_z "$@" && la
     }
-fi
-
-if command -v fzf &> /dev/null; then
-    eval "$(fzf --bash)"
-fi
-
-if command -v starship &> /dev/null; then
-    eval "$(starship init bash)"
 fi
